@@ -1,0 +1,17 @@
+{
+  "name": "@qrypto/security",
+  "version": "0.7.0",
+  "private": true,
+  "description": "Security attack surface tests — JWT algorithm confusion, IDOR, withdrawal tampering",
+  "scripts": {
+    "test": "playwright test",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@qrypto/shared-types": "*"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.45.3",
+    "typescript": "^5.5.3"
+  }
+}

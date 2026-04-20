@@ -1,0 +1,16 @@
+{
+  "name": "@qrypto/performance",
+  "version": "0.7.0",
+  "private": true,
+  "description": "k6 TypeScript load scenarios — order bursts, WebSocket load, auth storms",
+  "scripts": {
+    "test:burst": "k6 run src/scenarios/order-burst.ts",
+    "test:websocket": "k6 run src/scenarios/websocket-load.ts",
+    "test:all": "k6 run src/runner.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/k6": "^0.52.0",
+    "typescript": "^5.5.3"
+  }
+}

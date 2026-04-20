@@ -1,0 +1,89 @@
+##
+# qrypto — PR Pipeline
+#
+# Triggered on every pull request to main or develop.
+# Target: under 4 minutes total. Fast feedback is not a nice-to-have
+# in fintech — a slow CI loop means engineers skip it.
+#
+# Phase 1: lint + typecheck only.
+# Suites are added incrementally as they are built (Phases 2–7).
+##
+
+name: PR — Lint & Typecheck
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+  push:
+    branches:
+      - develop
+
+concurrency:
+  group: pr-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '20'
+  NPM_VERSION: '10'
+
+jobs:
+  lint-and-typecheck:
+    name: Lint & Typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build shared-types
+        run: npm run build:types
+        # shared-types must be built before typecheck runs on consuming packages
+
+      - name: Typecheck — all packages
+        run: npm run typecheck --workspaces --if-present
+
+      - name: Lint — all packages
+        run: npm run lint
+
+      - name: Format check
+        run: npm run format:check
+
+  commitlint:
+    name: Commit Message Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate commit messages
+        run: |
+          npx commitlint \
+            --from ${{ github.event.pull_request.base.sha }} \
+            --to ${{ github.event.pull_request.head.sha }} \
+            --verbose
