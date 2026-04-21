@@ -14,7 +14,7 @@ No version bump ships without a CHANGELOG entry. Every entry maps to real commit
 
 ---
 
-## [0.1.0] — 2024-01-01
+## [0.1.0] — 2026-04-20
 
 _Phase 1 — Platform Foundation_
 
