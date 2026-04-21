@@ -50,12 +50,20 @@ module.exports = {
     "no-console": ["warn", { allow: ["warn", "error"] }],
   },
   settings: {
-    "import/resolver": {
-      typescript: {
-        project: ["./packages/*/tsconfig.json"],
+      "import/resolver": {
+        typescript: {
+          project: [
+            "./packages/shared-types/tsconfig.json",
+            "./packages/mock-server/tsconfig.json",
+            "./packages/api-suite/tsconfig.json",
+            "./packages/e2e-suite/tsconfig.json",
+            "./packages/compliance-suite/tsconfig.json",
+            "./packages/performance-suite/tsconfig.json",
+            "./packages/security-suite/tsconfig.json",
+          ],
+        },
       },
     },
-  },
   ignorePatterns: [
     "dist/",
     "node_modules/",

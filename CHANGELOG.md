@@ -14,6 +14,69 @@ No version bump ships without a CHANGELOG entry. Every entry maps to real commit
 
 ---
 
+## [0.2.0] — 2026-04-21
+
+_Phase 2 — Mock Server_
+
+### Added
+
+- `@qrypto/mock-server` complete implementation — standalone exchange mock server
+  published to npm, runnable via `npx @qrypto/mock-server`. Zero Docker dependency.
+  Starts in under 3 seconds.
+
+- **HTTP server** on port 8080 with structured JSON request/response logging and
+  correlation IDs on every request. All routes return `{ data }` / `{ code, message }`
+  envelope format consistent with a real exchange API.
+
+- **Auth routes** (`/auth`): login with brute-force lockout (5 attempts → 30 min lock),
+  `pre_2fa` → `full` scope upgrade flow, token rotation on refresh, session list and
+  per-session revocation.
+
+- **KYC routes** (`/kyc`): document submission triggering the full state machine
+  (`unverified → pending → under_review → approved/rejected`), status with capability
+  flags (`canWithdraw`, `canTrade`), document list.
+
+- **Wallet routes** (`/wallet`): multi-currency balances, withdrawal with KYC gate +
+  AML gate + 2FA validation, all arithmetic via `decimal.js`, paginated transaction
+  history, deposit addresses per currency.
+
+- **Trading routes** (`/trading`): order placement (market/limit/stop) with balance
+  reservation, IDOR-protected order access, cancellation, order book depth, price
+  ticker, filled trade history.
+
+- **Admin/QA control routes** (`/admin`): `POST /admin/reset` for guaranteed test
+  isolation, force KYC status, force AML flags, confirm pending deposits, health check
+  with state summary, seed user catalog with credentials.
+
+- **Chaos mode** via `POST /admin/chaos`: configurable response latency, forced HTTP
+  error codes, WebSocket connection drops, stale price feed injection. All chaos resets
+  via `DELETE /admin/chaos`. Admin routes are always exempt from chaos.
+
+- **WebSocket server** on port 4000: `ticker:<pair>` channel (1s interval, random walk
+  price simulation), `orderbook:<pair>` channel (2s interval depth snapshots). Chaos
+  integration: `dropWebSocket` terminates all connections, `stalePriceFeedSeconds`
+  pauses ticker updates.
+
+- **Seed data**: 9 users covering every KYC/AML lifecycle state with hardcoded IDs
+  (`SEED_USER_IDS` catalog), pre-funded multi-currency wallets, 3 seed orders
+  (open/partial/filled), 4 seed transactions (confirmed deposits, confirmed withdrawal,
+  pending deposit). All accessible via `GET /admin/users`.
+
+- **In-memory rate limiting**: 5 login attempts per 15 min, 10 withdrawals per hour,
+  100 API calls per minute. Cleared by `POST /admin/reset`.
+
+- `packages/mock-server/CHANGELOG.md` — npm consumer changelog tracking mock server
+  changes independently of the monorepo root.
+
+- `packages/mock-server/README.md` — npx quickstart, full endpoint reference, admin
+  API docs, chaos mode guide, seed user catalog, rate limit table.
+
+- `docs/adr/003-mock-server-over-docker.md` — rationale for standalone Node.js server
+  over Docker: setup time, no container runtime dependency, publishable to npm,
+  10-minute green run requirement.
+
+---
+
 ## [0.1.0] — 2026-04-20
 
 _Phase 1 — Platform Foundation_
@@ -91,5 +154,6 @@ _Phase 1 — Platform Foundation_
 
 ---
 
-[Unreleased]: https://github.com/qrypto/qrypto/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/qrypto/qrypto/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/qrypto/qrypto/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/qrypto/qrypto/releases/tag/v0.1.0

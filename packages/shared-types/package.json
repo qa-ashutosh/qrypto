@@ -6,22 +6,27 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "require": "./dist/index.js",
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
     "./types": {
+      "require": "./dist/types/index.js",
       "import": "./dist/types/index.js",
       "types": "./dist/types/index.d.ts"
     },
     "./schemas": {
+      "require": "./dist/schemas/index.js",
       "import": "./dist/schemas/index.js",
       "types": "./dist/schemas/index.d.ts"
     },
     "./factories": {
+      "require": "./dist/factories/index.js",
       "import": "./dist/factories/index.js",
       "types": "./dist/factories/index.d.ts"
     },
     "./utils/*": {
+      "require": "./dist/utils/*.js",
       "import": "./dist/utils/*.js",
       "types": "./dist/utils/*.d.ts"
     }

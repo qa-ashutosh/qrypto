@@ -1,7 +1,7 @@
 {
   "name": "@qrypto/mock-server",
   "version": "0.2.0",
-  "description": "Standalone exchange mock server — zero Docker, starts in under 3 seconds",
+  "description": "Standalone exchange mock server \u2014 zero Docker, starts in under 3 seconds",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
@@ -26,5 +26,13 @@
     "@types/ws": "^8.5.11",
     "@types/uuid": "^10.0.0",
     "typescript": "^5.5.3"
+  },
+  "files": [
+    "dist/",
+    "CHANGELOG.md",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
   }
 }
