@@ -1,6 +1,6 @@
 {
   "name": "qrypto",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Production-grade QA automation monorepo for a crypto exchange platform",
   "workspaces": [
@@ -39,5 +39,17 @@
   "engines": {
     "node": ">=20.0.0",
     "npm": ">=10.0.0"
+  },
+  "peerDependencies": {
+    "express": "^4.22.1",
+    "uuid": "^10.0.0",
+    "ws": "^8.20.0",
+    "zod": "^3.25.76"
+  },
+  "lint-staged": {
+    "packages/*/src/**/*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   }
 }

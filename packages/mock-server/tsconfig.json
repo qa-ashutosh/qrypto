@@ -3,7 +3,13 @@
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",
-    "composite": true
+    "composite": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "paths": {
+      "@qrypto/shared-types": ["../shared-types/src/index.ts"],
+      "@qrypto/shared-types/*": ["../shared-types/src/*"]
+    }
   },
   "references": [
     { "path": "../shared-types" }
