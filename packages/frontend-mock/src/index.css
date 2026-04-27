@@ -1,0 +1,194 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  /* Core palette — dark terminal */
+  --bg-base: #0a0c0f;
+  --bg-surface: #0f1218;
+  --bg-elevated: #161b24;
+  --bg-overlay: #1d2433;
+  --bg-input: #111520;
+
+  /* Borders */
+  --border-subtle: #1e2535;
+  --border-default: #253045;
+  --border-strong: #354060;
+
+  /* Text */
+  --text-primary: #e2e8f5;
+  --text-secondary: #8896b0;
+  --text-muted: #4a5568;
+  --text-inverse: #0a0c0f;
+
+  /* Accent — electric amber for financial data */
+  --accent: #f5a623;
+  --accent-dim: #b87a1a;
+  --accent-glow: rgba(245, 166, 35, 0.15);
+
+  /* Semantic */
+  --green: #00d395;
+  --green-dim: rgba(0, 211, 149, 0.12);
+  --red: #ff4d6a;
+  --red-dim: rgba(255, 77, 106, 0.12);
+  --blue: #4d9fff;
+  --blue-dim: rgba(77, 159, 255, 0.12);
+  --yellow: #ffd166;
+
+  /* Typography */
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+
+  /* Spacing */
+  --nav-height: 52px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Scanline texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--text-primary); }
+
+button {
+  font-family: var(--font-mono);
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+input, select, textarea {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
+  padding: 8px 12px;
+  border-radius: 3px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+input:focus, select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+input::placeholder { color: var(--text-muted); }
+
+/* Number inputs — right-aligned */
+input[type="number"] { text-align: right; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-surface); }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 2px; }
+
+/* Utility classes */
+.mono { font-family: var(--font-mono); }
+.text-green { color: var(--green); }
+.text-red { color: var(--red); }
+.text-accent { color: var(--accent); }
+.text-muted { color: var(--text-muted); }
+.text-secondary { color: var(--text-secondary); }
+
+.tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tag-green { background: var(--green-dim); color: var(--green); }
+.tag-red { background: var(--red-dim); color: var(--red); }
+.tag-yellow { background: rgba(255, 209, 102, 0.12); color: var(--yellow); }
+.tag-blue { background: var(--blue-dim); color: var(--blue); }
+.tag-muted { background: var(--bg-overlay); color: var(--text-muted); }
+
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  padding: 16px;
+}
+
+.divider {
+  height: 1px;
+  background: var(--border-subtle);
+  margin: 16px 0;
+}
+
+/* Page layout */
+.page {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-title {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+/* Grid layouts */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+@media (max-width: 768px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .page { padding: 16px; }
+}
+
+/* Animations */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes slide-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+  animation: slide-in 0.2s ease-out;
+}
