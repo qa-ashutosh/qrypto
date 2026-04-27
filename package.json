@@ -1,8 +1,21 @@
 {
   "name": "qrypto",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "description": "Production-grade QA automation monorepo for a crypto exchange platform",
+  "author": {
+    "name": "Ashutosh Parihar",
+    "email": "qa.ashutosh3@gmail.com",
+    "url": "https://github.com/qa-ashutosh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/qa-ashutosh/qrypto.git"
+  },
+  "homepage": "https://github.com/qa-ashutosh/qrypto#readme",
+  "bugs": {
+    "url": "https://github.com/qa-ashutosh/qrypto/issues"
+  },
   "workspaces": [
     "packages/*"
   ],
