@@ -279,5 +279,11 @@ authRouter.delete('/sessions/:id', requireAuth, requireFullScope, (req, res) => 
   }
 
   session.isRevoked = true;
+
+  // Revoke all tokens associated with this session
+  // Walk the revoked tokens set and add the session's JTI
+  // Since we don't store JTI per session, we mark by sessionId in a separate set
+  getState().revokedSessions.add(session.id);
+
   res.status(204).send();
 });

@@ -1,6 +1,7 @@
 {
   "name": "@qrypto/shared-types",
   "version": "0.1.0",
+  "type": "module",
   "description": "Shared domain types, Zod schemas, test factories, and utilities for the qrypto QA platform",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

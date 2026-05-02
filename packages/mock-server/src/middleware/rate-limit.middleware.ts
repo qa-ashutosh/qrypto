@@ -64,8 +64,8 @@ export function clearRateLimits(): void {
 // ─── Preset Limiters ──────────────────────────────────────────────────────────
 
 export const loginRateLimit = rateLimit({
-  max: 5,
-  windowMs: 15 * 60 * 1000, // 5 attempts per 15 minutes
+  max: 6, // 5 attempts + 1 to trigger lockout
+  windowMs: 15 * 60 * 1000, // 6 attempts per 15 minutes
   keyPrefix: 'login',
 });
 

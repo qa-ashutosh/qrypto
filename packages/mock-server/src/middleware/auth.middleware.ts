@@ -12,7 +12,7 @@ import { JwtError, verifyToken } from '@qrypto/shared-types';
 import type { NextFunction, Request, Response } from 'express';
 
 import { getEnvOrThrow } from '../config.js';
-import { isTokenRevoked } from '../state.js';
+import { isTokenRevoked, getState } from '../state.js';
 
 export interface AuthLocals {
   userId: string;
@@ -52,6 +52,12 @@ export function requireAuth(req: Request, res: Response, next: NextFunction): vo
         code: 'TOKEN_REVOKED',
         message: 'Token has been revoked',
       });
+      return;
+    }
+
+    // Check if the session itself has been revoked via DELETE /auth/sessions/:id
+    if (getState().revokedSessions.has(payload.sid)) {
+      res.status(401).json({ code: 'TOKEN_REVOKED', message: 'Session has been revoked' });
       return;
     }
 

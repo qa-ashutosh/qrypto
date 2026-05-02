@@ -172,6 +172,7 @@ export function seedState(): {
 
   const fundedUserIds: UserId[] = [
     SEED_USER_IDS.VERIFIED,
+    SEED_USER_IDS.UNVERIFIED, // Unverified but funded to test KYC withdrawal blocks
     SEED_USER_IDS.KYC_PENDING,
     SEED_USER_IDS.KYC_REJECTED,
     SEED_USER_IDS.AML_FLAGGED,
