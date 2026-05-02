@@ -32,6 +32,7 @@ export interface MockState {
   transactions: Map<string, Transaction>;
   wallets: Map<string, WalletBalance>; // key: `${userId}:${currency}`
   revokedTokens: Set<string>; // jti values of revoked tokens
+  revokedSessions: Set<string>; // session IDs of revoked sessions (for immediate session revocation)
   chaos: ChaosConfig;
 }
 
@@ -62,6 +63,7 @@ function buildInitialState(): MockState {
     transactions: seed.transactions,
     wallets: seed.wallets,
     revokedTokens: new Set(),
+    revokedSessions: new Set(),
     chaos: { ...DEFAULT_CHAOS },
   };
 }

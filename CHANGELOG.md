@@ -14,6 +14,67 @@ No version bump ships without a CHANGELOG entry. Every entry maps to real commit
 
 ---
 
+## [0.4.0] — 2026-05-03
+
+_Phase 4 — API Suite_
+
+### Added
+
+- `@qrypto/api-suite` complete implementation — Playwright API test suite,
+  zero browser overhead, full suite runs in under 3 minutes.
+
+- `BaseApiClient` — retry with exponential backoff, auth token injection,
+  correlation ID on every request, rate-limit (429) handling, typed error parsing.
+
+- Domain clients: `AuthClient`, `KycClient`, `WalletClient`, `TradingClient`,
+  `AdminClient` — typed methods for every mock server endpoint. `AuthClient.loginFull()`
+  convenience method completes the full password + 2FA flow in one call.
+
+- `src/fixtures/index.ts` — `SEED_USERS`, `SEED_ORDERS`, `SEED_TRANSACTIONS` catalogs
+  mirroring mock server seed data. Tests reference users by semantic key, not raw UUID.
+
+- **Auth tests** — login (with/without 2FA), invalid credentials, 5-attempt brute-force
+  lockout, pre_2fa scope enforcement, token revocation after 2FA, refresh rotation, logout
+  revocation, malformed token rejection, session list, session IDOR protection, concurrent
+  sessions all independently valid.
+
+- **KYC tests** — capability flags for all KYC states, withdrawal gate for unverified/
+  pending/rejected, AML flag blocking, clearing AML re-enables withdrawals, trading gate,
+  admin KYC approval immediately enables trading, document submission state machine,
+  double-submission rejection (409).
+
+- **Wallet tests** — satoshi-level seed balance assertions (string equality, never
+  parseFloat), balance invariant (total = available + reserved) verified after every
+  operation, BTC fee exactly 0.00010000, USDT fee exactly 1.000000, insufficient funds
+  on amount+fee exceeding balance, balance unchanged on failed withdrawal, deposit
+  confirmation credits correct amount, currency filter, pagination.
+
+- **Trading tests** — limit/market order placement, market order fills immediately,
+  balance reservation on limit order, limit order requires price, stop order requires
+  stopPrice, insufficient balance rejection, status filter, IDOR protection (other user's
+  order returns 404), cancellation of open order, 409 on filled/cancelled order, order
+  book bids < asks, invalid pair 400.
+
+- **Calculation tests** — 0.1 + 0.2 float precision trap (documented and tested),
+  fee is 0.1% of notional, multi-withdrawal balance accumulation precision, balance
+  invariant after withdrawal and deposit confirmation, decimal precision per currency
+  (8dp BTC/ETH, 6dp stablecoins).
+
+- **Race condition tests** — two simultaneous 4000 USDT withdrawals from 5000 balance
+  (at most one succeeds), three concurrent BTC withdrawals from insufficient balance,
+  simultaneous orders do not over-allocate, parallel KYC submissions (only one succeeds,
+  others get 409).
+
+- Global setup — server health check with retry before first test, full state reset
+  to seed values. Tests cannot start if mock server is not healthy.
+
+- `packages/api-suite/README.md` — run instructions, test structure, coverage map,
+  P0/P1/P2 priority classification.
+
+- Root `package.json` bumped to `0.4.0`.
+
+---
+
 ## [0.3.0] — 2026-04-27
 
 _Phase 3 — Frontend Mock_
