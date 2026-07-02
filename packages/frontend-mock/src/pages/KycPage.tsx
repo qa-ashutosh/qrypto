@@ -204,6 +204,7 @@ export function KycPage() {
                   value={selectedType}
                   onChange={(e) => setSelectedType(e.target.value)}
                   data-testid="kyc-document-type"
+                  aria-label="Document type"
                   style={{ width: '100%' }}
                 >
                   {DOCUMENT_TYPES.map((t) => (

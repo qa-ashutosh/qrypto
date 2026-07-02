@@ -382,6 +382,7 @@ export function LoginPage({ onSuccess }: LoginPageProps) {
                 </button>
                 <button
                   type="button"
+                  data-testid="2fa-back"
                   onClick={() => {
                     setStep('credentials');
                     setError('');
