@@ -16,7 +16,7 @@
   /* Text */
   --text-primary: #e2e8f5;
   --text-secondary: #8896b0;
-  --text-muted: #4a5568;
+  --text-muted: #8a95a8;
   --text-inverse: #0a0c0f;
 
   /* Accent — electric amber for financial data */
@@ -25,7 +25,7 @@
   --accent-glow: rgba(245, 166, 35, 0.15);
 
   /* Semantic */
-  --green: #00d395;
+  --green: #00a876;
   --green-dim: rgba(0, 211, 149, 0.12);
   --red: #ff4d6a;
   --red-dim: rgba(255, 77, 106, 0.12);

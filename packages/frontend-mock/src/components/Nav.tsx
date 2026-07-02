@@ -87,7 +87,7 @@ export function Nav({ currentPage, onNavigate }: NavProps) {
               padding: '0 16px',
               height: 'var(--nav-height)',
               background: 'transparent',
-              color: currentPage === item.id ? 'var(--text-primary)' : 'var(--text-muted)',
+              color: currentPage === item.id ? 'var(--text-primary)' : '#7a8ba8',
               borderBottom:
                 currentPage === item.id ? '2px solid var(--accent)' : '2px solid transparent',
               borderTop: 'none',
@@ -115,7 +115,7 @@ export function Nav({ currentPage, onNavigate }: NavProps) {
           letterSpacing: '0.08em',
           padding: '6px 12px',
           background: 'transparent',
-          color: 'var(--text-muted)',
+          color: '#7a8ba8',
           border: '1px solid var(--border-default)',
           borderRadius: 3,
           cursor: 'pointer',
@@ -126,7 +126,7 @@ export function Nav({ currentPage, onNavigate }: NavProps) {
           (e.target as HTMLButtonElement).style.borderColor = 'var(--red)';
         }}
         onMouseLeave={(e) => {
-          (e.target as HTMLButtonElement).style.color = 'var(--text-muted)';
+          (e.target as HTMLButtonElement).style.color = '#7a8ba8';
           (e.target as HTMLButtonElement).style.borderColor = 'var(--border-default)';
         }}
       >

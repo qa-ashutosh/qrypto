@@ -2,11 +2,14 @@
   "name": "@qrypto/e2e-suite",
   "version": "0.5.0",
   "private": true,
-  "description": "Playwright browser E2E suite — critical user journeys, a11y, visual regression",
+  "description": "Playwright browser E2E suite \u2014 critical user journeys, a11y, visual regression",
   "scripts": {
     "test": "playwright test",
     "test:smoke": "playwright test --grep @smoke",
     "test:a11y": "playwright test --grep @a11y",
+    "test:visual": "playwright test --grep @visual",
+    "test:mobile": "playwright test --grep @mobile",
+    "report": "playwright show-report playwright-report",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -17,5 +20,6 @@
     "@playwright/test": "^1.45.3",
     "allure-playwright": "^3.0.0",
     "typescript": "^5.5.3"
-  }
+  },
+  "type": "module"
 }

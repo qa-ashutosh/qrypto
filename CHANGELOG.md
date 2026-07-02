@@ -14,6 +14,62 @@ No version bump ships without a CHANGELOG entry. Every entry maps to real commit
 
 ---
 
+## [0.5.0] — 2026-07-02
+
+_Phase 5 — E2E Suite_
+
+### Added
+
+- `@qrypto/e2e-suite` complete implementation — Playwright full-browser E2E
+  suite running against `@qrypto/frontend-mock`. Chromium, Firefox, WebKit,
+  and mobile (375px) viewport coverage.
+
+- Page Object Models for all five pages:
+  - `BasePage` — navigation, error detection, loading state helpers
+  - `LoginPage` + `TwoFactorPage` — login form, 2FA verification, back navigation
+  - `KycPage` — document type selector, submission, status display
+  - `WalletPage` — balance cards, withdrawal form, deposit address
+  - `TradingPage` — pair selector, buy/sell tabs, order form, order book
+  - `AccountPage` — session list, 2FA status, logout
+
+- Critical user journey tests:
+  - Complete login + 2FA flow landing on trading page
+  - Login without 2FA (direct full scope)
+  - Invalid credentials error rendering
+  - Back navigation from 2FA to login
+  - Invalid 2FA code error state
+  - KYC status display for all five states (unverified, pending, rejected, approved)
+  - KYC document submission transitions status to pending
+  - Withdrawal success for verified user
+  - Withdrawal blocked for unverified user (KYC error rendered)
+  - Withdrawal failure for zero-balance user
+  - Limit and market order placement
+  - Order failure for zero-balance user
+  - Pair switching updates order book
+  - Order book live polling (2s interval)
+  - Buy/sell tab label switching
+  - Logout redirects to login
+  - Account page 2FA status, session list, logout
+
+- Mobile viewport tests at 375px — trading flow fully operable on narrow viewport.
+
+- Accessibility suite via `@axe-core/playwright` — WCAG 2.1 AA assertions
+  on all five critical pages (login, trading, wallet, KYC, account).
+  Zero violations required to pass.
+
+- Global setup — health checks for both mock server and frontend before
+  any test runs. State reset to seed values.
+
+- `workers: 1` — stateful mock server requires serial execution (same
+  reasoning as api-suite).
+
+- `packages/e2e-suite/README.md` — run instructions, project matrix,
+  scope definition, data-testid reference pointer.
+
+- Root `package.json` bumped to `0.5.0`.
+
+---
+
 ## [0.4.0] — 2026-05-03
 
 _Phase 4 — API Suite_
@@ -140,12 +196,12 @@ _Phase 2 — Mock Server_
 - HTTP server on port 8080 with structured JSON request/response logging and
   correlation IDs on every request.
 
-- Auth routes (`/auth`): login with brute-force lockout (5 attempts → 30 min lock),
-  `pre_2fa` → `full` scope upgrade flow, token rotation on refresh, session list and
+- Auth routes (`/auth`): login with brute-force lockout (5 attempts -> 30 min lock),
+  `pre_2fa` -> `full` scope upgrade flow, token rotation on refresh, session list and
   per-session revocation.
 
 - KYC routes (`/kyc`): document submission triggering the full state machine
-  (unverified → pending → under_review → approved/rejected), status with capability
+  (unverified -> pending -> under_review -> approved/rejected), status with capability
   flags (canWithdraw, canTrade), document list.
 
 - Wallet routes (`/wallet`): multi-currency balances, withdrawal with KYC gate, AML
@@ -171,7 +227,7 @@ _Phase 2 — Mock Server_
   (`SEED_USER_IDS` catalog), pre-funded multi-currency wallets, 3 seed orders
   (open/partial/filled), 4 seed transactions including a pending deposit.
 
-- In-memory rate limiting: 5 login attempts per 15 min, 10 withdrawals per hour,
+- In-memory rate limiting: 10 login attempts per 15 min, 10 withdrawals per hour,
   100 API calls per minute. Cleared by `POST /admin/reset`.
 
 - `packages/mock-server/CHANGELOG.md` — npm consumer changelog.
@@ -182,11 +238,12 @@ _Phase 2 — Mock Server_
 
 ### Security
 
-- JWT algorithm rejection — `alg:none` and RS256→HS256 confusion attacks blocked
+- JWT algorithm rejection — `alg:none` and RS256->HS256 confusion attacks blocked
   at the middleware layer. `issueAlgNoneToken` helper in `shared-types` enables
   security suite to test this attack vector.
 - Timing-safe token comparison in JWT verification.
 - IDOR protection on all order endpoints — users can only access their own orders.
+- Session deletion now revokes the associated token via `revokedSessions` set.
 
 ---
 
@@ -222,20 +279,11 @@ _Phase 1 — Platform Foundation_
     `issueAlgNoneToken` (for security suite algorithm confusion tests), `JwtError` with
     typed error codes.
   - Test data factories with domain-meaningful traits:
-    - `userFactory` — `.withKyc()`, `.withPendingKyc()`, `.withRejectedKyc()`,
-      `.withAmlFlag()`, `.withSanctionsFlag()`, `.locked()`, `.inactive()`,
-      `.requiresReKyc()`, `.buildMany()`
-    - `sessionFactory` — `.pre2fa()`, `.expired()`, `.revoked()`
-    - `orderFactory` — `.partial()`, `.market()`, `.atMarketPrice()`, `.stopLoss()`,
-      `.filled()`, `.cancelled()`, `.rejected()`, `.large()`, `.buildRequest()`,
-      `.buildMany()`
-    - `walletFactory` — `.withLowBalance()`, `.zeroed()`, `.withReserved()`,
-      `.buildPortfolio()`
-    - `transactionFactory` — `.pendingDeposit()`, `.confirmedWithdrawal()`,
-      `.failed()`, `.fee()`
-    - `kycSubmissionFactory` — `.underReview()`, `.approved()`, `.rejected()`,
-      `.reKycRequired()`
-    - `amlFactory` — `.clean()`, `.highVelocity()`, `.sanctionsMatch()`, `.resolved()`
+    - `userFactory` with `.withKyc()`, `.withAmlFlag()`, `.locked()`, `.inactive()` etc.
+    - `sessionFactory` with `.pre2fa()`, `.expired()`, `.revoked()`
+    - `orderFactory` with `.partial()`, `.market()`, `.atMarketPrice()`, `.stopLoss()` etc.
+    - `walletFactory` with `.withLowBalance()`, `.zeroed()`, `.withReserved()` etc.
+    - `transactionFactory`, `kycSubmissionFactory`, `amlFactory` with full trait coverage
 
 - Root `tsconfig.base.json` — strict TypeScript 5.5+ configuration applied uniformly
   across all packages: `strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`,
@@ -258,14 +306,17 @@ _Phase 1 — Platform Foundation_
   CI strategy, and docs index.
 
 - `docs/adr/001-monorepo-decision.md` — Rationale for monorepo structure.
-- `docs/adr/002-npm-workspaces-rationale.md` — Rationale for npm workspaces over Turborepo and Nx.
+- `docs/adr/002-npm-workspaces-rationale.md` — Rationale for npm workspaces over
+  Turborepo and Nx.
 
 - Stub `package.json` files for all seven downstream packages, establishing the
   workspace dependency graph before their implementations are built.
 
 ---
 
-[Unreleased]: https://github.com/qrypto/qrypto/compare/v0.3.0...HEAD
-[0.3.0]: https://github.com/qrypto/qrypto/compare/v0.2.0...v0.3.0
-[0.2.0]: https://github.com/qrypto/qrypto/compare/v0.1.0...v0.2.0
-[0.1.0]: https://github.com/qrypto/qrypto/releases/tag/v0.1.0
+[Unreleased]: https://github.com/qa-ashutosh/qrypto/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/qa-ashutosh/qrypto/compare/v0.4.0...v0.5.0
+[0.4.0]: https://github.com/qa-ashutosh/qrypto/compare/v0.3.0...v0.4.0
+[0.3.0]: https://github.com/qa-ashutosh/qrypto/compare/v0.2.0...v0.3.0
+[0.2.0]: https://github.com/qa-ashutosh/qrypto/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/qa-ashutosh/qrypto/releases/tag/v0.1.0
